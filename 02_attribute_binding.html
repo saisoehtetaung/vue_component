@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .red-color{
+            color: red;
+        }
+
+        .delete{
+            text-decoration: line-through;
+        }
+        img{
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="message" />
+        <h1 :class="[textRed,deleteMessage]">{{message}}</h1>
+        <a :href="URL" target="_blank">youtube</a>
+        <h2 :class="age >22 ? textRed : nothing">{{message}}</h2>
+        <img :src="mysrc" />
+        <span :title="myTitle">CL</span>
+        <input type="text" value="Hello" :disabled="status == true"  />
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+    <!-- 
+        class, href, disabled, src, 
+     -->
+
+    <script>
+
+        let app = new Vue({
+            el : '#app',
+            data: {
+                message: 'this is testing from vue',
+                textRed: 'red-color',
+                deleteMessage : 'delete',
+                URL : 'https://www.youtube.com',
+                age: 24,
+                mysrc : './image/dog.jpg',
+                myTitle: 'CODE LAB',
+                status: false,
+            },
+        });
+    </script>
+</body>
+</html>

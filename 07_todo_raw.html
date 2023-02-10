@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza List</title>
+</head>
+<body>
+    <div id="testing">
+        <h3>Pizza Lists</h3>
+        <input type="text" placeholder="Enter Pizza Name" v-model="pizzadata.name" /><br/>
+        <small style="color:red" v-if="validation.nameStatus">Pizza Name is required.<br /></small><br />
+        <input type="text" placeholder="Enter Pizza Price" v-model="pizzadata.price" /><br/>
+        <small style="color:red" v-if="validation.priceStatus">Pizza Price is required.<br /></small><br />
+        <button @click="create()">Create</button>
+
+        <hr/>
+
+        <table border="2">
+            <tr>
+                <th>ID</th>
+                <th>Pizza Name</th>
+                <th>Status</th>
+            </tr>
+            <tr v-for="item in items">
+                <td >{{item.id}}</td>
+                <td >{{item.name}}</td>
+                <td >{{item.price}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script>
+        let app = new Vue({
+            el: '#testing',
+            data: {
+                pizzadata:{
+                    name: '',
+                    price: '',
+                },
+                items: [
+                    {id: '1',name:'Chease Pizza',price: '20000'},
+                ],
+                validation: {
+                    nameStatus : false,
+                    priceStatus: false,
+                }
+            },
+            methods: {
+                create(){
+                    
+                    this.validationCheck();
+                    if(this.validation.nameStatus == false && this.validation.priceStatus == false){
+                        this.items.push({
+                            id: this.items.length + 1,
+                            name: this.pizzadata.name,
+                            price: this.pizzadata.price,
+                        });
+                        this.clear();
+                    }
+                },
+                clear(){
+                    this.pizzadata.name = '';
+                    this.pizzadata.price = '';
+                },
+                validationCheck(){
+                    // if(this.pizzadata.name== ''){
+                    //     this.validation.nameStatus = true;
+                    // }else{
+                    //     this.validation.nameStatus = false;
+                    // }
+
+                    this.validation.nameStatus = this.pizzadata.name == '' ? true : false;
+
+                    //  if (this.pizzadata.price == '') {
+                    //     this.validation.priceStatus = true;
+                    // } else {
+                    //     this.validation.priceStatus = false;
+                    // }
+
+                    this.validation.priceStatus = this.pizzadata.price == '' ? true : false;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

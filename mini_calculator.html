@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Calculator</title>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="container" id="app">
+        <div class="row my-5 justify-content-center">
+            <div class="card bg-secondary">
+                
+                <div class="card-body">
+                    <div class="card-title text-center">
+                       <h5 class="display-5 text-decoration-underline mb-3">My calculator</h5>
+                    </div>
+                    <div class="text-white display-3 border p-2 rounded mb-3 d-flex justify-content-end align-items-center">
+                        {{answer}}
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6 mb-3">
+                            <input type="number" name="" id="" class="form-control text-end " placeholder="Enter First Number" v-model="userInput.firstNumber"/>
+                            <small class="text-danger " v-if="validation.firstNumberStatus">First number is Required</small>
+                        </div>
+                        <div class="form-group col-6 mb-3">
+                            <input type="number" name="" id="" class="form-control text-end " placeholder="Enter Second Number" v-model="userInput.secondNumber"/>
+                            <small class="text-danger" v-if="validation.secondNumberStatus">Second number is Required</small>
+                        </div>
+                        <div class="col-4" class="form-control mb-3">
+                            
+                            <select class="form-select" v-model="userInput.operator">
+                                <option value="">Choose the Operator</option>
+                                <option value="add">+</option>
+                                <option value="minus">-</option>
+                                <option value="multiply">*</option>
+                                <option value="division">/</option>
+                            </select>
+                            <small class="text-danger" v-if="validation.operatorStatus">Need to choose operator</small>
+                            
+                        </div>
+                        <div class="col-4 mb-4">
+                            <button class="btn btn-lg w-100  btn-primary" @click="calculate()">Calculate</button>
+                        </div>
+                        <div class="col-4 mb-4">
+                            <button class="btn btn-lg w-100 btn-danger" @click="cleanform()">Clear</button>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-lg w-100 btn-warning " @click="save()" :disabled="saveStatus">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <h5 class="text-white">History</h5>
+
+                    <div class="text-danger" v-for="history in histories">
+                       {{history}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- MDB -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script>
+        let app = new Vue({
+            el : '#app',
+            data: {
+                answer : '0',
+                userInput : {
+                    firstNumber : '',
+                    secondNumber : '',
+                    operator : '',
+                },
+                histories : [],
+                validation: {
+                    firstNumberStatus : false,
+                    secondNumberStatus : false,
+                    operatorStatus : false,
+                },
+                saveStatus : true,
+            },
+            methods :{
+                calculate(){
+                    this.validationCheck();
+                    if(!this.validation.firstNumberStatus && !this.validation.secondNumberStatus && !this.validation.operatorStatus){
+                         let result = this.operation();
+                        this.answer = `
+                        ${this.userInput.firstNumber} ${this.operator} ${this.userInput.secondNumber} = ${result}
+                    `;
+                        this.saveStatus = false;
+                        this.clearform();
+                    }
+                   
+                    
+                },
+                operation(){
+                    this.userInput.firstNumber = Number(this.userInput.firstNumber);
+                    this.userInput.secondNumber = Number(this.userInput.secondNumber);
+                    switch (this.userInput.operator) {
+                        case 'add': this.operator = '+';
+                            return this.userInput.firstNumber + this.userInput.secondNumber;
+                            break;
+                        case 'minus': this.operator = '-';
+                            return this.userInput.firstNumber - this.userInput.secondNumber;
+                            break;
+                        case 'multiply': this.operator = '*';
+                            return this.userInput.firstNumber * this.userInput.secondNumber;
+                            break;
+                        case 'division': this.operator = '/';
+                            return this.userInput.firstNumber / this.userInput.secondNumber;
+                            break;
+                        default:
+                            return 'error';
+                    }
+                },
+                clearform(){
+                    this.userInput.firstNumber = '';
+                    this.userInput.secondNumber = '';
+                    this.userInput.operator = '';
+                    
+                },
+                cleanform(){
+                    this.validation.firstNumberStatus = false;
+                    this.validation.secondNumberStatus = false;
+                    this.validation.operatorStatus = false;
+                    this.clearform();
+                    this.answer = '0';
+                    this.histories = [];
+                },
+                save(){
+                    if(!this.saveStatus){
+                        this.histories.push(this.answer);
+                        this.answer = '0';
+                        this.saveStatus = true;
+                    }
+                   
+                },
+                validationCheck(){
+                    this.validation.firstNumberStatus = this.userInput.firstNumber == '' ? true : false;
+                    this.validation.secondNumberStatus = this.userInput.secondNumber == '' ? true : false;
+                    this.validation.operatorStatus = this.userInput.operator == '' ? true : false;
+                },
+            },
+        })
+    </script>
+</body>
+</html>
